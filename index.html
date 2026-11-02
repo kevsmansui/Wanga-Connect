@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +15,7 @@
   --grey: #64748b;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -32,8 +31,8 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  box-shadow: 0 3px 12px #092d5718;
   flex-wrap: wrap;
+  box-shadow: 0 3px 12px #092d5718;
 }
 
 .logo img {
@@ -43,14 +42,9 @@ header {
   display: block;
 }
 
-nav {
-  display: flex;
-  gap: 10px;
-}
+nav { display: flex; gap: 10px; }
 
-button, select {
-  font: inherit;
-}
+button, select { font: inherit; }
 
 nav button, .action-button {
   border: none;
@@ -69,10 +63,7 @@ nav button.active,
   color: white;
 }
 
-button:hover {
-  filter: brightness(0.94);
-  transform: translateY(-1px);
-}
+button:hover { filter: brightness(.94); }
 
 main {
   max-width: 1100px;
@@ -88,9 +79,7 @@ main {
   box-shadow: 0 5px 20px #092d5710;
 }
 
-h1, h2, h3 {
-  margin-top: 0;
-}
+h1, h2, h3 { margin-top: 0; }
 
 .route-label {
   display: inline-block;
@@ -110,10 +99,7 @@ h1, h2, h3 {
   margin: 20px 0;
 }
 
-.next-stop small {
-  opacity: 0.8;
-  font-size: 14px;
-}
+.next-stop small { opacity: .8; font-size: 14px; }
 
 .next-stop h1 {
   font-size: clamp(28px, 5vw, 42px);
@@ -130,9 +116,9 @@ h1, h2, h3 {
 
 .progress-fill {
   height: 100%;
-  background: #168ff0;
+  background: var(--blue);
   border-radius: 20px;
-  transition: width 0.7s ease;
+  transition: width .7s ease;
 }
 
 .bus {
@@ -140,7 +126,7 @@ h1, h2, h3 {
   top: -30px;
   transform: translateX(-50%);
   font-size: 28px;
-  transition: left 0.7s ease;
+  transition: left .7s ease;
   animation: bounce 1.5s infinite ease-in-out;
 }
 
@@ -152,7 +138,6 @@ h1, h2, h3 {
 .stop-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
   margin-top: 20px;
 }
 
@@ -174,10 +159,7 @@ h1, h2, h3 {
   background: white;
 }
 
-.stop.passed {
-  color: #9aa8b6;
-  text-decoration: line-through;
-}
+.stop.passed { color: #9aa8b6; }
 
 .stop.passed .stop-dot {
   background: #a9bacb;
@@ -195,9 +177,7 @@ h1, h2, h3 {
   box-shadow: 0 0 0 5px #168ff025;
 }
 
-.stop-name {
-  flex: 1;
-}
+.stop-name { flex: 1; }
 
 .transfer {
   font-size: 11px;
@@ -215,10 +195,7 @@ h1, h2, h3 {
   margin-top: 20px;
 }
 
-.controls button {
-  flex: 1;
-  min-width: 120px;
-}
+.controls button { flex: 1; min-width: 120px; }
 
 select {
   padding: 12px;
@@ -229,9 +206,7 @@ select {
   color: var(--navy);
 }
 
-.field {
-  margin: 18px 0;
-}
+.field { margin: 18px 0; }
 
 .field label {
   display: block;
@@ -259,9 +234,7 @@ select {
   border-radius: 50%;
 }
 
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
 
 footer {
   text-align: center;
@@ -271,25 +244,11 @@ footer {
 }
 
 @media (max-width: 600px) {
-  header {
-    justify-content: center;
-  }
-
-  .logo img {
-    width: 240px;
-  }
-
-  nav {
-    width: 100%;
-  }
-
-  nav button {
-    flex: 1;
-  }
-
-  .panel {
-    padding: 18px;
-  }
+  header { justify-content: center; }
+  .logo img { width: 240px; }
+  nav { width: 100%; }
+  nav button { flex: 1; }
+  .panel { padding: 18px; }
 }
 </style>
 </head>
@@ -311,115 +270,94 @@ footer {
 
 <main>
 
-  <!-- PASSENGER MENU -->
-  <section id="passengerMenu">
+<section id="passengerMenu">
+  <div class="panel">
+    <span class="status" id="journeyStatus">Journey not started</span>
+    <p id="clock" style="float:right;font-weight:bold"></p>
 
-    <div class="panel">
-      <span class="status" id="journeyStatus">Journey not started</span>
-      <p id="clock" style="float:right;font-weight:bold"></p>
+    <h2>Passenger Information</h2>
 
-      <h2>Passenger Information</h2>
-      <div class="field">
-        <label for="passengerRoute">Select a route</label>
-        <select id="passengerRoute" onchange="changeRoute(this.value)">
-        </select>
-      </div>
-
-      <div class="route-label" id="passengerRouteLabel">Route 81</div>
-
-      <div class="next-stop">
-        <small>NEXT STOP</small>
-        <h1 id="passengerNextStop">Waiting for journey</h1>
-        <p id="passengerDestination">Select a route to get started</p>
-      </div>
-
-      <h3>Route progress</h3>
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill"
-          style="width:0%"></div>
-        <div class="bus" id="bus" style="left:0%">🚌</div>
-      </div>
-
-      <p id="progressText">0% of journey completed</p>
+    <div class="field">
+      <label for="passengerRoute">Select a route</label>
+      <select id="passengerRoute" onchange="changeRoute(this.value)"></select>
     </div>
 
-    <div class="panel">
-      <h2>Upcoming Stops</h2>
-      <div class="stop-list" id="passengerStops"></div>
+    <div class="route-label" id="passengerRouteLabel">Route 81</div>
+
+    <div class="next-stop">
+      <small>NEXT STOP</small>
+      <h1 id="passengerNextStop">Waiting for journey</h1>
+      <p id="passengerDestination">Select a route to get started</p>
     </div>
 
-    <div class="panel">
-      <h3>Service announcements</h3>
-      <p id="announcement">Welcome aboard Wanga Connect!</p>
+    <h3>Route progress</h3>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      <div class="bus" id="bus" style="left:0%">🚌</div>
     </div>
 
-  </section>
+    <p id="progressText">0% of journey completed</p>
+  </div>
 
-  <!-- DRIVER MENU -->
-  <section id="driverMenu" class="hidden">
+  <div class="panel">
+    <h2>Upcoming Stops</h2>
+    <div class="stop-list" id="passengerStops"></div>
+  </div>
 
-    <div class="panel">
-      <span class="status" id="driverStatus">Journey not started</span>
-      <h2>Driver Console</h2>
-      <p>Manage the bus journey and update the passenger information display.</p>
+  <div class="panel">
+    <h3>Service announcements</h3>
+    <p id="announcement">Welcome aboard Wanga Connect!</p>
+  </div>
+</section>
 
-      <div class="field">
-        <label for="driverRoute">Select route and direction</label>
-        <select id="driverRoute" onchange="changeRoute(this.value)">
-        </select>
-      </div>
+<section id="driverMenu" class="hidden">
+  <div class="panel">
+    <span class="status" id="driverStatus">Journey not started</span>
+    <h2>Driver Console</h2>
 
-      <div class="field">
-        <label for="announcementInput">Passenger announcement</label>
-        <input id="announcementInput" type="text"
-          placeholder="Enter an announcement..."
-          style="width:100%;padding:12px;border:1px solid #cbd9e8;border-radius:10px">
-      </div>
-
-      <button class="action-button primary" onclick="sendAnnouncement()">
-        Send announcement
-      </button>
-
-      <div class="controls">
-        <button class="action-button primary" onclick="startJourney()">
-          Start journey
-        </button>
-        <button class="action-button" onclick="previousStop()">
-          Previous stop
-        </button>
-        <button class="action-button primary" onclick="nextStop()">
-          Next stop
-        </button>
-        <button class="action-button" onclick="endJourney()">
-          End journey
-        </button>
-        <button class="action-button" onclick="resetJourney()">
-          Reset
-        </button>
-      </div>
+    <div class="field">
+      <label for="driverRoute">Select route and direction</label>
+      <select id="driverRoute" onchange="changeRoute(this.value)"></select>
     </div>
 
-    <div class="panel">
-      <h2>Journey overview</h2>
-      <p><strong>Current route:</strong> <span id="driverRouteName"></span></p>
-      <p><strong>Current stop:</strong> <span id="driverCurrentStop"></span></p>
-      <p><strong>Next stop:</strong> <span id="driverNextStop"></span></p>
-      <p><strong>Stops remaining:</strong> <span id="driverRemaining"></span></p>
+    <div class="field">
+      <label for="announcementInput">Passenger announcement</label>
+      <input id="announcementInput" type="text"
+        placeholder="Enter an announcement..."
+        style="width:100%;padding:12px;border:1px solid #cbd9e8;border-radius:10px">
     </div>
 
-    <div class="panel">
-      <h3>Driver instructions</h3>
-      <p>Use the Next Stop button when the bus departs a stop. The passenger display will automatically update.</p>
-      <p>Use Previous Stop if you need to correct the stop position.</p>
-    </div>
+    <button class="action-button primary" onclick="sendAnnouncement()">
+      Send announcement
+    </button>
 
-  </section>
+    <div class="controls">
+      <button class="action-button primary" onclick="startJourney()">Start journey</button>
+      <button class="action-button" onclick="previousStop()">Previous stop</button>
+      <button class="action-button primary" onclick="nextStop()">Next stop</button>
+      <button class="action-button" onclick="endJourney()">End journey</button>
+      <button class="action-button" onclick="resetJourney()">Reset</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Journey overview</h2>
+    <p><strong>Current route:</strong> <span id="driverRouteName"></span></p>
+    <p><strong>Current stop:</strong> <span id="driverCurrentStop"></span></p>
+    <p><strong>Next stop:</strong> <span id="driverNextStop"></span></p>
+    <p><strong>Stops remaining:</strong> <span id="driverRemaining"></span></p>
+  </div>
+
+  <div class="panel">
+    <h3>Driver instructions</h3>
+    <p>Use Next Stop when the bus departs a stop. The passenger display and voice announcement will update.</p>
+    <p>Use Previous Stop to correct the stop position.</p>
+  </div>
+</section>
 
 </main>
 
-<footer>
-  Wanga Connect · Connecting Wulla Wanga
-</footer>
+<footer>Wanga Connect · Connecting Wulla Wanga</footer>
 
 <script>
 const routes = {
@@ -484,6 +422,77 @@ let currentStop = 0;
 let journeyStarted = false;
 let journeyEnded = false;
 
+// OWN VOICE ANNOUNCEMENTS
+function playStopVoice(routeKey, stopIndex) {
+  const route = routes[routeKey];
+  const stopName = route.stops[stopIndex];
+
+  // Stop any announcement that is still playing.
+  if (window.currentAnnouncement) {
+    window.currentAnnouncement.pause();
+    window.currentAnnouncement.currentTime = 0;
+  }
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+
+  // Audio filenames use route name and stop number.
+  // Stop numbers start at 1.
+  const stopNumber = stopIndex + 1;
+  const audioPath = `audio/${routeKey}-${stopNumber}.mp3`;
+
+  const audio = new Audio(audioPath);
+  window.currentAnnouncement = audio;
+
+  // If the recording is missing, use the computer voice.
+  audio.onerror = function() {
+    if ("speechSynthesis" in window) {
+      const speech = new SpeechSynthesisUtterance(
+        "The next stop is " + stopName
+      );
+
+      speech.lang = "en-NZ";
+      speech.rate = 0.9;
+      speech.pitch = 1;
+      speech.volume = 1;
+
+      window.speechSynthesis.speak(speech);
+    }
+  };
+
+  audio.play().catch(() => {
+    // Try computer voice if the recording cannot play.
+    if ("speechSynthesis" in window) {
+      const speech = new SpeechSynthesisUtterance(
+        "The next stop is " + stopName
+      );
+
+      speech.lang = "en-NZ";
+      speech.rate = 0.9;
+      window.speechSynthesis.speak(speech);
+    }
+  });
+}
+
+function speakEndOfRoute() {
+  if (window.currentAnnouncement) {
+    window.currentAnnouncement.pause();
+  }
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(
+      "This is the end of the route. Thank you for travelling with Wanga Connect."
+    );
+
+    speech.lang = "en-NZ";
+    speech.rate = 0.9;
+    window.speechSynthesis.speak(speech);
+  }
+}
+
 function populateRoutes() {
   const options = [
     ["81a", "81 · To Wanga Hill"],
@@ -531,6 +540,14 @@ function changeRoute(route) {
   document.getElementById("announcement").textContent =
     "Welcome aboard Wanga Connect!";
 
+  if (window.currentAnnouncement) {
+    window.currentAnnouncement.pause();
+  }
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+
   updateDisplay();
 }
 
@@ -544,6 +561,7 @@ function endJourney() {
   journeyStarted = false;
   journeyEnded = true;
   updateDisplay();
+  speakEndOfRoute();
 }
 
 function resetJourney() {
@@ -560,9 +578,13 @@ function nextStop() {
     currentStop++;
     journeyStarted = true;
     journeyEnded = false;
+
+    // Play the recording for the stop the bus is arriving at.
+    playStopVoice(currentRoute, currentStop);
   } else {
     journeyStarted = false;
     journeyEnded = true;
+    speakEndOfRoute();
   }
 
   updateDisplay();
@@ -575,6 +597,14 @@ function previousStop() {
     journeyEnded = false;
   }
 
+  if (window.currentAnnouncement) {
+    window.currentAnnouncement.pause();
+  }
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+
   updateDisplay();
 }
 
@@ -585,12 +615,23 @@ function sendAnnouncement() {
   if (message) {
     document.getElementById("announcement").textContent = message;
     document.getElementById("announcementInput").value = "";
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+
+      const speech = new SpeechSynthesisUtterance(message);
+      speech.lang = "en-NZ";
+      speech.rate = 0.9;
+
+      window.speechSynthesis.speak(speech);
+    }
   }
 }
 
 function updateDisplay() {
   const route = routes[currentRoute];
   const stops = route.stops;
+
   const percent = stops.length > 1
     ? (currentStop / (stops.length - 1)) * 100
     : 0;
@@ -652,12 +693,8 @@ function updateDisplay() {
     stopList.appendChild(row);
   });
 
-  document.getElementById("driverRouteName").textContent =
-    route.name;
-
-  document.getElementById("driverCurrentStop").textContent =
-    stops[currentStop];
-
+  document.getElementById("driverRouteName").textContent = route.name;
+  document.getElementById("driverCurrentStop").textContent = stops[currentStop];
   document.getElementById("driverNextStop").textContent = next;
 
   document.getElementById("driverRemaining").textContent =
