@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wanga Connect | Passenger Information</title>
+
+<style>
+:root {
+  --navy: #082c57;
+  --blue: #168ff0;
+  --light-blue: #e8f5ff;
+  --white: #ffffff;
+  --grey: #64748b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #edf5fc;
+  color: var(--navy);
+}
+
+header {
+  background: white;
+  padding: 12px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 3px 12px #092d5718;
+  flex-wrap: wrap;
+}
+
+.logo img {
+  width: 280px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+nav {
+  display: flex;
+  gap: 10px;
+}
+
+button, select {
+  font: inherit;
+}
+
+nav button, .action-button {
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  background: var(--light-blue);
+  color: var(--navy);
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+nav button.active,
+.action-button.primary {
+  background: var(--blue);
+  color: white;
+}
+
+button:hover {
+  filter: brightness(0.94);
+  transform: translateY(-1px);
+}
+
+main {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 18px;
+}
+
+.panel {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 22px;
+  box-shadow: 0 5px 20px #092d5710;
+}
+
+h1, h2, h3 {
+  margin-top: 0;
+}
+
+.route-label {
+  display: inline-block;
+  background: var(--blue);
+  color: white;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.next-stop {
+  background: linear-gradient(120deg, #082c57, #168ff0);
+  color: white;
+  border-radius: 18px;
+  padding: 28px;
+  margin: 20px 0;
+}
+
+.next-stop small {
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.next-stop h1 {
+  font-size: clamp(28px, 5vw, 42px);
+  margin: 10px 0;
+}
+
+.progress-track {
+  height: 9px;
+  background: #dce9f5;
+  border-radius: 20px;
+  margin: 35px 5px 15px;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #168ff0;
+  border-radius: 20px;
+  transition: width 0.7s ease;
+}
+
+.bus {
+  position: absolute;
+  top: -30px;
+  transform: translateX(-50%);
+  font-size: 28px;
+  transition: left 0.7s ease;
+  animation: bounce 1.5s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -5px; }
+}
+
+.stop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 20px;
+}
+
+.stop {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 13px 8px;
+  border-bottom: 1px solid #edf2f7;
+  color: var(--grey);
+}
+
+.stop-dot {
+  width: 14px;
+  height: 14px;
+  border: 3px solid #b7c8d8;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: white;
+}
+
+.stop.passed {
+  color: #9aa8b6;
+  text-decoration: line-through;
+}
+
+.stop.passed .stop-dot {
+  background: #a9bacb;
+  border-color: #a9bacb;
+}
+
+.stop.current {
+  color: var(--blue);
+  font-weight: bold;
+}
+
+.stop.current .stop-dot {
+  background: var(--blue);
+  border-color: var(--blue);
+  box-shadow: 0 0 0 5px #168ff025;
+}
+
+.stop-name {
+  flex: 1;
+}
+
+.transfer {
+  font-size: 11px;
+  color: var(--blue);
+  background: var(--light-blue);
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.controls button {
+  flex: 1;
+  min-width: 120px;
+}
+
+select {
+  padding: 12px;
+  border: 1px solid #cbd9e8;
+  border-radius: 10px;
+  width: 100%;
+  background: white;
+  color: var(--navy);
+}
+
+.field {
+  margin: 18px 0;
+}
+
+.field label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e5f8ec;
+  color: #18763b;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: #27ae60;
+  border-radius: 50%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: var(--grey);
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  header {
+    justify-content: center;
+  }
+
+  .logo img {
+    width: 240px;
+  }
+
+  nav {
+    width: 100%;
+  }
+
+  nav button {
+    flex: 1;
+  }
+
+  .panel {
+    padding: 18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    <img src="wangaconnect-logo.png" alt="Wanga Connect">
+  </div>
+
+  <nav>
+    <button id="passengerTab" class="active"
+      onclick="showMenu('passenger')">Passenger</button>
+    <button id="driverTab"
+      onclick="showMenu('driver')">Driver</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- PASSENGER MENU -->
+  <section id="passengerMenu">
+
+    <div class="panel">
+      <span class="status" id="journeyStatus">Journey not started</span>
+      <p id="clock" style="float:right;font-weight:bold"></p>
+
+      <h2>Passenger Information</h2>
+      <div class="field">
+        <label for="passengerRoute">Select a route</label>
+        <select id="passengerRoute" onchange="changeRoute(this.value)">
+        </select>
+      </div>
+
+      <div class="route-label" id="passengerRouteLabel">Route 81</div>
+
+      <div class="next-stop">
+        <small>NEXT STOP</small>
+        <h1 id="passengerNextStop">Waiting for journey</h1>
+        <p id="passengerDestination">Select a route to get started</p>
+      </div>
+
+      <h3>Route progress</h3>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"
+          style="width:0%"></div>
+        <div class="bus" id="bus" style="left:0%">🚌</div>
+      </div>
+
+      <p id="progressText">0% of journey completed</p>
+    </div>
+
+    <div class="panel">
+      <h2>Upcoming Stops</h2>
+      <div class="stop-list" id="passengerStops"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Service announcements</h3>
+      <p id="announcement">Welcome aboard Wanga Connect!</p>
+    </div>
+
+  </section>
+
+  <!-- DRIVER MENU -->
+  <section id="driverMenu" class="hidden">
+
+    <div class="panel">
+      <span class="status" id="driverStatus">Journey not started</span>
+      <h2>Driver Console</h2>
+      <p>Manage the bus journey and update the passenger information display.</p>
+
+      <div class="field">
+        <label for="driverRoute">Select route and direction</label>
+        <select id="driverRoute" onchange="changeRoute(this.value)">
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="announcementInput">Passenger announcement</label>
+        <input id="announcementInput" type="text"
+          placeholder="Enter an announcement..."
+          style="width:100%;padding:12px;border:1px solid #cbd9e8;border-radius:10px">
+      </div>
+
+      <button class="action-button primary" onclick="sendAnnouncement()">
+        Send announcement
+      </button>
+
+      <div class="controls">
+        <button class="action-button primary" onclick="startJourney()">
+          Start journey
+        </button>
+        <button class="action-button" onclick="previousStop()">
+          Previous stop
+        </button>
+        <button class="action-button primary" onclick="nextStop()">
+          Next stop
+        </button>
+        <button class="action-button" onclick="endJourney()">
+          End journey
+        </button>
+        <button class="action-button" onclick="resetJourney()">
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Journey overview</h2>
+      <p><strong>Current route:</strong> <span id="driverRouteName"></span></p>
+      <p><strong>Current stop:</strong> <span id="driverCurrentStop"></span></p>
+      <p><strong>Next stop:</strong> <span id="driverNextStop"></span></p>
+      <p><strong>Stops remaining:</strong> <span id="driverRemaining"></span></p>
+    </div>
+
+    <div class="panel">
+      <h3>Driver instructions</h3>
+      <p>Use the Next Stop button when the bus departs a stop. The passenger display will automatically update.</p>
+      <p>Use Previous Stop if you need to correct the stop position.</p>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  Wanga Connect · Connecting Wulla Wanga
+</footer>
+
+<script>
+const routes = {
+  "81a": {
+    name: "81 · To Wanga Hill",
+    destination: "Wanga Hill",
+    stops: [
+      "Wulla Wanga Crescent (near the entrance)",
+      "Wulla Wanga Shops (Near Cash Converters)",
+      "Wulla Wanga Commercial Area",
+      "Emerald Ridge",
+      "Wanga Hill"
+    ],
+    transfers: [1, 2]
+  },
+
+  "81b": {
+    name: "81 · To Wulla Wanga Crescent",
+    destination: "Wulla Wanga Crescent",
+    stops: [
+      "Wanga Hill",
+      "Emerald Ridge",
+      "Wulla Wanga Commercial Area",
+      "Wulla Wanga Shops (Near Cash Converters)",
+      "Wulla Wanga Crescent (near the entrance)"
+    ],
+    transfers: [2, 3]
+  },
+
+  "102a": {
+    name: "102 · To Wanga Towers",
+    destination: "Wanga Towers",
+    stops: [
+      "Wulla Wanga Crescent",
+      "Wulla Wanga Shops",
+      "Wulla Wanga Park",
+      "Wulla Wanga Commercial Area",
+      "Wanga Hill",
+      "Emerald Ridge",
+      "Wanga Towers"
+    ],
+    transfers: [3, 4]
+  },
+
+  "102b": {
+    name: "102 · To Wanga Shops",
+    destination: "Wulla Wanga Shops",
+    stops: [
+      "Wanga Towers",
+      "Emerald Ridge",
+      "Wanga Hill",
+      "Wulla Wanga Commercial Area",
+      "Wulla Wanga Park",
+      "Wulla Wanga Shops"
+    ],
+    transfers: [2, 3, 5]
+  }
+};
+
+let currentRoute = "81a";
+let currentStop = 0;
+let journeyStarted = false;
+let journeyEnded = false;
+
+function populateRoutes() {
+  const options = [
+    ["81a", "81 · To Wanga Hill"],
+    ["81b", "81 · To Wulla Wanga Crescent"],
+    ["102a", "102 · To Wanga Towers"],
+    ["102b", "102 · To Wanga Shops"]
+  ];
+
+  ["passengerRoute", "driverRoute"].forEach(id => {
+    const select = document.getElementById(id);
+    select.innerHTML = "";
+
+    options.forEach(([value, label]) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = label;
+      select.appendChild(option);
+    });
+  });
+}
+
+function showMenu(menu) {
+  document.getElementById("passengerMenu")
+    .classList.toggle("hidden", menu !== "passenger");
+
+  document.getElementById("driverMenu")
+    .classList.toggle("hidden", menu !== "driver");
+
+  document.getElementById("passengerTab")
+    .classList.toggle("active", menu === "passenger");
+
+  document.getElementById("driverTab")
+    .classList.toggle("active", menu === "driver");
+}
+
+function changeRoute(route) {
+  currentRoute = route;
+  currentStop = 0;
+  journeyStarted = false;
+  journeyEnded = false;
+
+  document.getElementById("passengerRoute").value = route;
+  document.getElementById("driverRoute").value = route;
+
+  document.getElementById("announcement").textContent =
+    "Welcome aboard Wanga Connect!";
+
+  updateDisplay();
+}
+
+function startJourney() {
+  journeyStarted = true;
+  journeyEnded = false;
+  updateDisplay();
+}
+
+function endJourney() {
+  journeyStarted = false;
+  journeyEnded = true;
+  updateDisplay();
+}
+
+function resetJourney() {
+  currentStop = 0;
+  journeyStarted = false;
+  journeyEnded = false;
+  updateDisplay();
+}
+
+function nextStop() {
+  const stops = routes[currentRoute].stops;
+
+  if (currentStop < stops.length - 1) {
+    currentStop++;
+    journeyStarted = true;
+    journeyEnded = false;
+  } else {
+    journeyStarted = false;
+    journeyEnded = true;
+  }
+
+  updateDisplay();
+}
+
+function previousStop() {
+  if (currentStop > 0) {
+    currentStop--;
+    journeyStarted = true;
+    journeyEnded = false;
+  }
+
+  updateDisplay();
+}
+
+function sendAnnouncement() {
+  const message = document.getElementById("announcementInput")
+    .value.trim();
+
+  if (message) {
+    document.getElementById("announcement").textContent = message;
+    document.getElementById("announcementInput").value = "";
+  }
+}
+
+function updateDisplay() {
+  const route = routes[currentRoute];
+  const stops = route.stops;
+  const percent = stops.length > 1
+    ? (currentStop / (stops.length - 1)) * 100
+    : 0;
+
+  const next = currentStop < stops.length - 1
+    ? stops[currentStop + 1]
+    : "End of route";
+
+  document.getElementById("passengerRouteLabel").textContent =
+    route.name;
+
+  document.getElementById("passengerNextStop").textContent =
+    journeyEnded ? "Journey complete" :
+    journeyStarted ? next : stops[0];
+
+  document.getElementById("passengerDestination").textContent =
+    "Destination: " + route.destination;
+
+  document.getElementById("progressFill").style.width = percent + "%";
+  document.getElementById("bus").style.left = percent + "%";
+
+  document.getElementById("progressText").textContent =
+    Math.round(percent) + "% of journey completed";
+
+  const status = journeyEnded
+    ? "Journey completed"
+    : journeyStarted ? "Service in progress" : "Journey not started";
+
+  document.getElementById("journeyStatus").textContent = status;
+  document.getElementById("driverStatus").textContent = status;
+
+  const stopList = document.getElementById("passengerStops");
+  stopList.innerHTML = "";
+
+  stops.forEach((stop, index) => {
+    const row = document.createElement("div");
+    row.className = "stop";
+
+    if (index < currentStop) row.classList.add("passed");
+    if (index === currentStop) row.classList.add("current");
+
+    const dot = document.createElement("span");
+    dot.className = "stop-dot";
+
+    const name = document.createElement("span");
+    name.className = "stop-name";
+    name.textContent = stop;
+
+    row.appendChild(dot);
+    row.appendChild(name);
+
+    if (route.transfers.includes(index)) {
+      const transfer = document.createElement("span");
+      transfer.className = "transfer";
+      transfer.textContent = "TRANSFER";
+      row.appendChild(transfer);
+    }
+
+    stopList.appendChild(row);
+  });
+
+  document.getElementById("driverRouteName").textContent =
+    route.name;
+
+  document.getElementById("driverCurrentStop").textContent =
+    stops[currentStop];
+
+  document.getElementById("driverNextStop").textContent = next;
+
+  document.getElementById("driverRemaining").textContent =
+    journeyEnded ? 0 : stops.length - currentStop - 1;
+}
+
+function updateClock() {
+  document.getElementById("clock").textContent =
+    new Date().toLocaleTimeString("en-NZ", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+}
+
+populateRoutes();
+updateDisplay();
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
